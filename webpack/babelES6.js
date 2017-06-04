@@ -8,11 +8,19 @@ module.exports = function() {
                 {
                     test: /\.js$/,
                     exclude: /(node_modules)/,
-                    use: [{
+                    use: [
+                    {
                         loader: 'babel-loader',
                         options: {
-                            presets: [['es2015', {modules: false}]],
-                            plugins: ['syntax-dynamic-import']
+                            presets: [
+                                [ "es2015", { "modules": false } ],
+                                "react",
+                                // 'react-hmre'
+                            ],
+                            plugins: [
+                                'syntax-dynamic-import',
+                                'react-hot-loader/babel'
+                            ]
                         }
                     }]
                 },

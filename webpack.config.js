@@ -22,8 +22,7 @@ const PATHS = {
 const common = merge([
     {
         entry: {
-            'index' : PATHS.src + '/pages/index/index.js',
-            'blog' : PATHS.src + '/pages/blog/blog.js'
+            'index' : ["react-hot-loader/patch", PATHS.src + '/app.js']
         },
         output: {
             path: PATHS.build,
@@ -31,21 +30,9 @@ const common = merge([
         },
         plugins: [
             new HtmlWebpackPlugin({
-                template: PATHS.src + '/pages/index/index.pug',
-                chunks: ['index', 'common', 'vendor'],
-                filename: 'index.html'
-            }),
-            new HtmlWebpackPlugin({
-                template: PATHS.src + '/pages/blog/blog.pug',
-                chunks: ['blog', 'common', 'vendor'],
-                filename: 'blog.html'
-            }),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'vendor',
-                minChunks: function (module) {
-                    // this assumes your vendor imports exist in the node_modules directory
-                    return module.context && module.context.indexOf('node_modules') !== -1;
-                }
+                template: PATHS.src + '/index.html',
+                filename: 'index.html',
+                inject: 'body'
             })
         ]
 
