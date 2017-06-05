@@ -13,6 +13,9 @@ const uglifyJS = require ('./webpack/uglifyJS');
 const webpack = require('webpack');
 const images = require('./webpack/images');
 const es6 = require('./webpack/babelES6');
+const definePROD = require('./webpack/defineProd');
+const gzip = require('./webpack/gzip');
+const preactCompact = require('./webpack/preact-compact');
 
 const PATHS = {
     src: path.join(__dirname, 'src'),
@@ -22,17 +25,23 @@ const PATHS = {
 const common = merge([
     {
         entry: {
-            'index' : ["react-hot-loader/patch", PATHS.src + '/app.js']
+            index : [
+                "react-hot-loader/patch",
+                PATHS.src + '/app.js'],
+            vendor: ['react', 'react-dom'],
         },
         output: {
             path: PATHS.build,
-            filename: 'js/[name].js'
+            filename: 'js/[name].[chunkhash].js'
         },
         plugins: [
             new HtmlWebpackPlugin({
                 template: PATHS.src + '/index.html',
                 filename: 'index.html',
                 inject: 'body'
+            }),
+            new webpack.optimize.CommonsChunkPlugin({
+                names: ['vendor', 'manifest'] // Specify the common bundle's name.
             })
         ]
 
@@ -46,6 +55,9 @@ module.exports = function(env) {
     if (env === 'production') {
         return merge([
             common,
+            preactCompact(),
+            gzip(),
+            definePROD(),
             extractCSS(),
             uglifyJS()
         ]);
